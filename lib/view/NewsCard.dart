@@ -21,9 +21,20 @@ class NewsCard extends StatelessWidget {
               Text(
                 '${map['heading']}',
                 style: TextStyle(
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
-              )
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                '${map['story']}',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),

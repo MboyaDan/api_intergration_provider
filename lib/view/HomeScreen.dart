@@ -12,33 +12,41 @@ class HomeScreen extends StatelessWidget {
     context.read<Newsdata>().fetchData;
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                context.read<Newsdata>().initialValues();
+                context.read<Newsdata>().fetchData;
+              },
+              icon: Icon(Icons.refresh))
+        ],
         title: Text("Rest Provider"),
       ),
-      body: RefreshIndicator(
-          onRefresh: () async {},
-          child: Center(
-            //consumer widget will be listening for data
-            child: Consumer<Newsdata>(
-              builder: (context, value, child) {
-                //if the link is zero,value is false then?
-                return value.map.length == 0 && !value.error
-                    ? CircularProgressIndicator()
-                    : value.error
-                        ? Text(
-                            'Somethin went wrong.${value.errorMessage}',
-                            textAlign: TextAlign.center,
-                          )
-                        : ListView.builder(
-                            itemCount: value.map['stories'].length,
-                            itemBuilder: (context, index) {
-                              return NewsCard(
-                                map: value.map['stories'][index],
-                              );
-                            },
+      body: RefreshIndicator(onRefresh: () async {
+        await context.read<Newsdata>().fetchData;
+      }, child: Center(
+        //consumer widget will be listening for data
+        child: Consumer<Newsdata>(
+          builder: (context, value, child) {
+            //if the link is zero,value is false then?
+            return value.map.length == 0 && !value.error
+                ? CircularProgressIndicator()
+                : value.error
+                    ? Text(
+                        'Something went wrong.${value.errorMessage}',
+                        textAlign: TextAlign.center,
+                      )
+                    : ListView.builder(
+                        itemCount: value.map['stories'].length,
+                        itemBuilder: (context, index) {
+                          return NewsCard(
+                            map: value.map['stories'][index],
                           );
-              },
-            ),
-          )),
+                        },
+                      );
+          },
+        ),
+      )),
     );
   }
 }
